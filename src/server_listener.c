@@ -31,6 +31,7 @@ int server_split(t_client *server, t_client *client, char *path)
   pid = fork();
   if (!pid)
   {
+    close(server->sock);
     _exit(server_logic(server, client, path));
   }
   else if (pid < 0)
@@ -39,5 +40,6 @@ int server_split(t_client *server, t_client *client, char *path)
     fprintf(stderr, "Error occurred while forking");
     return (1);
   }
+  close(client->sock);
   return (0);
 }

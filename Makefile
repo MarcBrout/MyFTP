@@ -22,7 +22,8 @@ SRC			=		command_cwd.c 		\
 					server.c			\
 					server_init.c		\
 					server_listener.c	\
-					server_logic.c
+					server_logic.c		\
+					replies.c
 
 SRCS		= 		$(addprefix $(SRC_DIR), $(SRC))
 

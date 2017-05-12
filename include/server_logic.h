@@ -7,7 +7,7 @@
 
 # include "types.h"
 
-void server_logic(t_client *server,
-                  t_client *client, char *path);
+int server_logic(t_client *server,
+                 t_client *client, char *path);
 
 #endif /* !MYFTP_SERVER_LOGIC_H */

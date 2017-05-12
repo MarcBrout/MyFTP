@@ -4,31 +4,101 @@
 
 #include <unistd.h>
 #include <string.h>
-#include "types.h"
+#include <dirent.h>
+#include <stdlib.h>
+#include "get_command.h"
+
+static int check_dir(t_work *work, char *path)
+{
+  char *fullpath;
+  DIR *dir;
+
+  if (!(fullpath = calloc(strlen(work->root_path) + strlen(path) + 1, 1)))
+    return (send_message(CLI_SOCK(work), 1, "451"));
+  strcat(fullpath, work->root_path);
+  strcat(fullpath, path);
+  if ((dir = opendir(fullpath)))
+  {
+    free(fullpath);
+    free(work->path);
+    if (!(work->path = strdup(path)))
+    {
+      closedir(dir);
+      return (send_message(CLI_SOCK(work), 1, "451"));
+    }
+    if (path[strlen(path) - 1] == '/' && strlen(path) > 1)
+      path[strlen(path) - 1] = 0;
+    closedir(dir);
+    return (send_message(CLI_SOCK(work), 2, "257", path));
+  }
+  free(fullpath);
+  closedir(dir);
+  return (send_message(CLI_SOCK(work), 1, "550"));
+}
+
+static int compute_dir(t_work *work, char *path_to_add)
+{
+  char *fullpath;
+
+  if (!(fullpath = calloc(strlen(work->path) + strlen(path_to_add) + 2, 1)))
+    return (send_message(CLI_SOCK(work), 2, "451",
+                         "Requested action aborted: local error in processing."));
+  strcat(fullpath, work->path);
+  if (strlen(work->path) > 1)
+    strcat(fullpath, "/");
+  strcat(fullpath, path_to_add);
+  return (check_dir(work, fullpath));
+}
+
+int cdup(t_work *work, char *command)
+{
+  char *pos;
+
+  (void)command;
+  if (strlen(work->path) == 1)
+    return (send_message(CLI_SOCK(work), 2, "550",
+                         "Resquested action not taken."));
+  pos = strrchr(work->path, '/');
+  if (pos != NULL)
+  {
+    if (pos == work->path)
+      pos[1] = 0;
+    else
+      *pos = 0;
+  }
+  return (0);
+}
+
+int exec_cdup_command(t_work *work, char *command)
+{
+  if (cdup(work, command))
+    return (1);
+  return (send_message(CLI_SOCK(work), 2, "200", "Command okay."));
+}
 
 int exec_cwd_command(t_work *work, char *command)
 {
   char *path;
 
   strtok(command, " ");
-
-  (void)work;
-  return (0);
-}
-
-int exec_cdup_command(t_work *work, char *command)
-{
-  (void)command;
-  (void)work;
-  return (0);
+  if ((path = strtok(NULL, " ")))
+  {
+    if (!strcmp(path, ".."))
+    {
+      if (cdup(work, command))
+        return (1);
+      return (send_message(CLI_SOCK(work), 2, "257", work->path));
+    }
+    if (path[0] == '/')
+      return (check_dir(work, path) == 1);
+    return (compute_dir(work, path));
+  }
+  return (send_message(CLI_SOCK(work), 2, "501",
+                       "Syntax error in parameters or arguments."));
 }
 
 int exec_pwd_command(t_work *work, char *command)
 {
   (void)command;
-  if (write(work->client->sock, "257 ", 4) < 0 ||
-      write(work->client->sock, work->path, strlen(work->path)) < 0 ||
-      write(work->client->sock, "\r\n", 2) < 0)
-    return (1);
-  return (0);
+  return (send_message(CLI_SOCK(work), 2, "257", work->path));
 }

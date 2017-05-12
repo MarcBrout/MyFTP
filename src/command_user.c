@@ -1,7 +1,6 @@
 #include <string.h>
 #include <unistd.h>
-#include <stdio.h>
-#include "types.h"
+#include "get_command.h"
 
 int exec_password_command(t_work *work, char *command)
 {
@@ -14,16 +13,16 @@ int exec_user_command(t_work *work, char *command)
 {
   char *value;
 
-  printf("USER TEST\n");
   strtok(command, " ");
-  while ((value = strtok(NULL, " ")))
+  value = strtok(NULL, " ");
+  if (value)
   {
     if (!strcmp(value, "Anonymous"))
-    {
-      printf("ANONYMOUS\n");
-      if (write(work->client->sock, "230\r\n", 5) == -1)
-        return (1);
-    }
+      return (send_message(CLI_SOCK(work), 2, "230",
+                           "User logged in, proceed."));
   }
+  else
+    return (send_message(CLI_SOCK(work), 2, "501",
+                         "Syntax error in parameters or arguments."));
   return (0);
 }

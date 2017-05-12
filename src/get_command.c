@@ -2,7 +2,29 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include "types.h"
+
+int send_message(Socket sock, int n, ...)
+{
+  va_list list;
+  char *str;
+
+  va_start(list, n);
+  while (n > 0)
+  {
+    str = va_arg(list, char *);
+    if (write(sock, str, strlen(str)) < 0 ||
+        (n > 1 && write(sock, " ", 1) < 0))
+    {
+      va_end(list);
+      return (1);
+    }
+    --n;
+  }
+  va_end(list);
+  return (write(sock, "\r\n", 2) < 0);
+}
 
 static char *concat(t_queue **root, char **dest)
 {
