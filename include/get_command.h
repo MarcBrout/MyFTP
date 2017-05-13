@@ -6,7 +6,7 @@
 
 # include "types.h"
 
-int send_message(Socket sock, int n, ...);
+int send_message(Socket sock, const char *format, ...);
 char *get_raw_command(Socket sock);
 int add_raw_command(t_queue **root, char *raw);
 char *find_command(t_queue **root);

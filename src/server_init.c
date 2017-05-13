@@ -29,7 +29,7 @@ Socket create_socket(int flag)
 
 int close_socket(Socket sock)
 {
-  if (close(sock) == - 1)
+  if (close(sock) == -1)
   {
     perror("");
     fprintf(stderr, "Error while closing server socket\n");

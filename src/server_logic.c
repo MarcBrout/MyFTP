@@ -26,7 +26,7 @@ static int process_read(t_client const *client)
   return (add_raw_command(&gl_root, raw_cmd));
 }
 
-static t_command gl_commands[16] = {
+static t_command gl_commands[35] = {
     {"QUIT", 4, exec_quit_command},
     {"USER", 4, exec_user_command},
     {"PASS", 4, exec_password_command},
@@ -42,6 +42,25 @@ static t_command gl_commands[16] = {
     {"STOR", 4, exec_stor_command},
     {"LIST", 4, exec_list_command},
     {"SYST", 4, exec_syst_command},
+    {"ACCT", 4, exec_unknown_command},
+    {"SMNT", 4, exec_unknown_command},
+    {"REIN", 4, exec_unknown_command},
+    {"TYPE", 4, exec_unknown_command},
+    {"STRU", 4, exec_unknown_command},
+    {"MODE", 4, exec_unknown_command},
+    {"STOU", 4, exec_unknown_command},
+    {"APPE", 4, exec_unknown_command},
+    {"ALLO", 4, exec_unknown_command},
+    {"RNFR", 4, exec_unknown_command},
+    {"RNTO", 4, exec_unknown_command},
+    {"SMNT", 4, exec_unknown_command},
+    {"ABOR", 4, exec_unknown_command},
+    {"SMNT", 4, exec_unknown_command},
+    {"RMD", 3, exec_unknown_command},
+    {"MKD", 3, exec_unknown_command},
+    {"NLST", 4, exec_unknown_command},
+    {"SITE", 4, exec_unknown_command},
+    {"STAT", 4, exec_unknown_command},
     {"END", 3, NULL}
 };
 
@@ -69,11 +88,15 @@ static int init_work(t_client *server, t_client *client,
 {
   work->client = client;
   work->server = server;
+  work->data = -1;
+  work->user = -1;
+  work->port = 0;
   if (!(work->path = strdup("/")))
     return (1);
   work->root_path = path;
   work->pasv_on = false;
   work->port_on = false;
+  work->logged = false;
   work->quit = false;
   return (0);
 }

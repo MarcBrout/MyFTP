@@ -33,6 +33,7 @@ int exec_stor_command(t_work *work, char *command);
 int exec_error_command(t_work *work, char *command);
 int exec_quit_command(t_work *work, char *command);
 int exec_syst_command(t_work *work, char *command);
+int exec_unknown_command(t_work *work, char *command);
 
 
 #endif /* !MYFTP_COMMANDS_H_ */
