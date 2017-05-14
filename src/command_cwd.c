@@ -42,6 +42,7 @@ static int check_dir(t_work *work, char *path)
 static int compute_dir(t_work *work, char *path_to_add)
 {
   char *fullpath;
+  int ret;
 
   if (!(fullpath = calloc(strlen(work->path) + strlen(path_to_add) + 2, 1)))
     return (send_message(CLI_SOCK(work), "%s %s", "451", replies[R451]));
@@ -49,7 +50,9 @@ static int compute_dir(t_work *work, char *path_to_add)
   if (strlen(work->path) > 1)
     strcat(fullpath, "/");
   strcat(fullpath, path_to_add);
-  return (check_dir(work, fullpath));
+  ret = check_dir(work, fullpath);
+  free(fullpath);
+  return (ret);
 }
 
 int cdup(t_work *work, char *command)

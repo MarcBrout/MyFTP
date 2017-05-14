@@ -18,6 +18,12 @@ typedef struct s_account
   const char *password;
 } t_account;
 
+typedef struct s_help
+{
+  const char *cmd;
+  const char *desc;
+} t_help;
+
 typedef struct s_client
 {
   Socket sock;
