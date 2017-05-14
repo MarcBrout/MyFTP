@@ -1,7 +1,12 @@
-//
-// Created by brout_m on 11/05/17.
-//
-
+/*
+** commands.h for  in /home/brout_m/rendu/system/PSU_2016_myftp
+**
+** Made by brout_m
+** Login   <marc.brout@epitech.eu>
+**
+** Started on  Sun May 14 16:23:34 2017 brout_m
+** Last update Sun May 14 16:25:23 2017 brout_m
+*/
 #ifndef COMMANDS_H_
 # define COMMANDS_H_
 
@@ -35,5 +40,4 @@ int exec_quit_command(t_work *work, char *command);
 int exec_syst_command(t_work *work, char *command);
 int exec_unknown_command(t_work *work, char *command);
 
-
-#endif /* !MYFTP_COMMANDS_H_ */
+#endif /* !COMMANDS_H_ */

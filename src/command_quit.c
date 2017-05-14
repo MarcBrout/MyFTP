@@ -1,7 +1,12 @@
-//
-// Created by brout_m on 11/05/17.
-//
-
+/*
+** command_quit.c for  in /home/brout_m/rendu/system/PSU_2016_myftp
+**
+** Made by brout_m
+** Login   <marc.brout@epitech.eu>
+**
+** Started on  Sun May 14 16:05:37 2017 brout_m
+** Last update Sun May 14 16:07:28 2017 brout_m
+*/
 #include <unistd.h>
 #include "types.h"
 

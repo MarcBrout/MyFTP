@@ -5,27 +5,27 @@
 ** Login   <marc.brout@epitech.eu>
 **
 ** Started on  Mon May  8 13:54:27 2017 brout_m
-** Last update Mon May  8 13:54:32 2017 brout_m
+** Last update Sun May 14 16:39:09 2017 brout_m
 */
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include "commands.h"
 #include "get_command.h"
 
-static t_queue *gl_root = NULL;
+static t_queue		*gl_root = NULL;
 
-static int process_read(t_client const *client)
+static int		process_read(t_client const *client)
 {
-  char *raw_cmd;
+  char			*raw_cmd;
 
   if (!(raw_cmd = get_raw_command(client->sock)))
     return (1);
   return (add_raw_command(&gl_root, raw_cmd));
 }
 
-static t_command gl_commands[35] = {
+static t_command gl_commands[35] =
+  {
     {"QUIT", 4, exec_quit_command},
     {"USER", 4, exec_user_command},
     {"PASS", 4, exec_password_command},
@@ -61,29 +61,28 @@ static t_command gl_commands[35] = {
     {"SITE", 4, exec_unknown_command},
     {"STAT", 4, exec_unknown_command},
     {"END", 3, NULL}
-};
+  };
 
-static int process_command(t_work *work)
+static int		process_command(t_work *work)
 {
-  char *cmd;
-  int i;
+  char			*cmd;
+  int			i;
 
   while ((cmd = find_command(&gl_root)))
-  {
-    i = 0;
-    printf("Command received : %s\n", cmd);
-    while (gl_commands[i].exec != NULL)
     {
-      if (!strncmp(gl_commands[i].command, cmd, gl_commands[i].len))
-        return (gl_commands[i].exec(work, cmd));
-      ++i;
+      i = 0;
+      while (gl_commands[i].exec != NULL)
+	{
+	  if (!strncmp(gl_commands[i].command, cmd, gl_commands[i].len))
+	    return (gl_commands[i].exec(work, cmd));
+	  ++i;
+	}
     }
-  }
   return (exec_error_command(work, NULL));
 }
 
-static int init_work(t_client *server, t_client *client,
-                      char *path, t_work *work)
+static int		init_work(t_client *server, t_client *client,
+				  char *path, t_work *work)
 {
   work->client = client;
   work->server = server;
@@ -101,16 +100,18 @@ static int init_work(t_client *server, t_client *client,
   return (0);
 }
 
-int server_logic(t_client *server, t_client *client, char *path)
+int			server_logic(t_client *server,
+				     t_client *client,
+				     char *path)
 {
-  t_work work;
+  t_work		work;
 
   if (init_work(server, client, path, &work))
     return (EXIT_FAILURE);
   while (!work.quit)
-  {
-    if (process_read(client) || process_command(&work))
-      return (EXIT_FAILURE);
-  }
+    {
+      if (process_read(client) || process_command(&work))
+	return (EXIT_FAILURE);
+    }
   return (EXIT_SUCCESS);
 }

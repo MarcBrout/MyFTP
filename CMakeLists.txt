@@ -23,6 +23,7 @@ set(MYFTP
         ./src/command_user.c
         ./src/get_command.c
         ./src/raw_command.c
+        ./src/command_pwd.c
         ./src/server.c
         ./src/server_init.c
         ./src/server_listener.c

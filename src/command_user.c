@@ -1,17 +1,26 @@
+/*
+** command_user.c for  in /home/brout_m/rendu/system/PSU_2016_myftp
+**
+** Made by brout_m
+** Login   <marc.brout@epitech.eu>
+**
+** Started on  Sun May 14 16:06:55 2017 brout_m
+** Last update Sun May 14 16:15:25 2017 brout_m
+*/
 #include <string.h>
 #include <unistd.h>
 #include "replies.h"
 #include "get_command.h"
 
-char const *replies[MAX_REPLIES];
-static t_account const users[2] = {
+char const		*replies[MAX_REPLIES];
+static t_account const	users[2] = {
     {"Anonymous", ""},
     {"Dieu", "42"}
 };
 
-int exec_password_command(t_work *work, char *command)
+int		exec_password_command(t_work *work, char *command)
 {
-  char *value;
+  char		*value;
 
   if (work->user < 0)
     return (send_message(CLI_SOCK(work), "%s %s", "332", replies[R332]));
@@ -30,10 +39,10 @@ int exec_password_command(t_work *work, char *command)
   return (send_message(CLI_SOCK(work), "%s %s", "530", replies[R530]));
 }
 
-int exec_user_command(t_work *work, char *command)
+int		exec_user_command(t_work *work, char *command)
 {
-  char *value;
-  int user;
+  char		*value;
+  int		user;
 
   strtok(command, " ");
   value = strtok(NULL, " ");

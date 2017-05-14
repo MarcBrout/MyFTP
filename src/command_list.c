@@ -1,7 +1,12 @@
-//
-// Created by brout_m on 11/05/17.
-//
-
+/*
+** command_list.c for  in /home/brout_m/rendu/system/PSU_2016_myftp
+**
+** Made by brout_m
+** Login   <marc.brout@epitech.eu>
+**
+** Started on  Sun May 14 16:03:34 2017 brout_m
+** Last update Sun May 14 16:30:07 2017 brout_m
+*/
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <fcntl.h>
@@ -15,33 +20,34 @@
 
 char const *replies[MAX_REPLIES];
 
-bool isReadable(const char *str)
+bool			isReadable(const char *str)
 {
   return (strcmp(str, ".") && strcmp(str, ".."));
 }
 
-int list_folder(t_work *work, DIR *dir)
+int			list_folder(t_work *work, DIR *dir)
 {
-  struct dirent *file;
+  struct dirent		*file;
 
   if (send_message(CLI_SOCK(work), "%s %s", "150", replies[R150]))
     return (1);
   while ((file = readdir(dir)))
-  {
-    if (isReadable(file->d_name))
     {
-      if (write(work->data_socket, file->d_name, strlen(file->d_name)) < 0 ||
-          write(work->data_socket, "\r\n", 2) < 0)
-        return (send_message(CLI_SOCK(work), "%s %s", "451", replies[R451]) || 1);
+      if (isReadable(file->d_name))
+	{
+	  if (write(work->data_socket, file->d_name, strlen(file->d_name)) < 0
+	      || write(work->data_socket, "\r\n", 2) < 0)
+	    return (send_message(CLI_SOCK(work),
+				 "%s %s", "451", replies[R451]) || 1);
+	}
     }
-  }
   closedir(dir);
   return (send_message(CLI_SOCK(work), "%s %s", "226", replies[R226]));
 }
 
-int list_file(t_work *work, const char *path)
+int			list_file(t_work *work, const char *path)
 {
-  char *msg;
+  char			*msg;
 
   if (access(path, F_OK) != -1)
     msg = strrchr(path, '/') + 1;
@@ -55,26 +61,26 @@ int list_file(t_work *work, const char *path)
   return (send_message(CLI_SOCK(work), "%s %s", "226", replies[R226]));
 }
 
-int launch_list(t_work *work, const char *path)
+int			launch_list(t_work *work, const char *path)
 {
-  DIR *dir;
-  char *fullpath;
-  int ret;
+  DIR			*dir;
+  char			*fullpath;
+  int			ret;
 
   fullpath = NULL;
   if (create_full_path(work, &fullpath, path))
     return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]) || 1);
   if ((dir = opendir(fullpath)))
-  {
-    free(fullpath);
-    return (list_folder(work, dir));
-  }
+    {
+      free(fullpath);
+      return (list_folder(work, dir));
+    }
   ret = list_file(work, fullpath);
   free(fullpath);
   return (ret);
 }
 
-int exec_list_command(t_work *work, char *command)
+int			exec_list_command(t_work *work, char *command)
 {
   if (work->user < 0)
     return (send_message(CLI_SOCK(work), "%s %s", "530", replies[R530]));

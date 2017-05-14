@@ -17,6 +17,7 @@ SRC			=		command_cwd.c 		\
 					command_user.c		\
 					command_quit.c		\
 					command_syst.c		\
+					command_pwd.c		\
 					get_command.c		\
 					raw_command.c		\
 					server.c		\
