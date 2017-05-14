@@ -5,7 +5,7 @@
 ** Login   <marc.brout@epitech.eu>
 **
 ** Started on  Mon May  8 13:54:27 2017 brout_m
-** Last update Sun May 14 16:39:09 2017 brout_m
+** Last update Sun May 14 16:57:38 2017 brout_m
 */
 #include <stdlib.h>
 #include <string.h>
@@ -14,6 +14,21 @@
 #include "get_command.h"
 
 static t_queue		*gl_root = NULL;
+
+static void		free_list()
+{
+  t_queue		*cur;
+  t_queue		*tmp;
+
+  cur = gl_root;
+  while (cur)
+    {
+      free(cur->str);
+      tmp = cur->next;
+      free(cur);
+      cur = tmp;
+    }
+}
 
 static int		process_read(t_client const *client)
 {
@@ -67,6 +82,7 @@ static int		process_command(t_work *work)
 {
   char			*cmd;
   int			i;
+  int			ret;
 
   while ((cmd = find_command(&gl_root)))
     {
@@ -74,9 +90,14 @@ static int		process_command(t_work *work)
       while (gl_commands[i].exec != NULL)
 	{
 	  if (!strncmp(gl_commands[i].command, cmd, gl_commands[i].len))
-	    return (gl_commands[i].exec(work, cmd));
+	    {
+	      ret = gl_commands[i].exec(work, cmd);
+	      free(cmd);
+	      return (ret);
+	    }
 	  ++i;
 	}
+      free(cmd);
     }
   return (exec_error_command(work, NULL));
 }
@@ -113,5 +134,7 @@ int			server_logic(t_client *server,
       if (process_read(client) || process_command(&work))
 	return (EXIT_FAILURE);
     }
+  free_list();
+  free(work.path);
   return (EXIT_SUCCESS);
 }

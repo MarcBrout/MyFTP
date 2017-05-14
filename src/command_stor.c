@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <fcntl.h>
+#include <stdlib.h>
 #include "get_command.h"
 #include "replies.h"
 #include "server_tools.h"
@@ -48,6 +49,7 @@ int		create_file(t_work *work, const char *file, int *fd)
     return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421])
 	    || 1);
   *fd = creat(fullpath, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH);
+  free(fullpath);
   return (0);
 }
 

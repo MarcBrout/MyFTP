@@ -5,7 +5,7 @@
 ** Login   <marc.brout@epitech.eu>
 **
 ** Started on  Sun May 14 16:05:00 2017 brout_m
-** Last update Sun May 14 16:40:07 2017 brout_m
+** Last update Sun May 14 17:04:06 2017 brout_m
 */
 #define _GNU_SOURCE
 #include <stdio.h>
@@ -65,14 +65,20 @@ int		exec_port_command(t_work *work, char *command)
 {
   uint16_t	port;
   char		*dest;
+  int		ret;
 
   if (work->user == -1)
     return (send_message(CLI_SOCK(work), "%s %s", "530", replies[R530]));
   if ((work->port_on || work->pasv_on) && close_datasocket(work))
     return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]) || 1);
   if (parse_ip(work, command, &dest, &port))
-    return (1);
+    {
+      free(dest);
+      return (1);
+    }
   if (!dest)
     return (0);
-  return (go_active(work, dest, port));
+  ret = go_active(work, dest, port);
+  free(dest);
+  return (ret);
 }
