@@ -4,11 +4,12 @@
 
 #include <string.h>
 #include "get_command.h"
+#include "replies.h"
 
+const char *replies[MAX_REPLIES];
 static const char *help_line =
     "USER PASS CWD CDUP QUIT DELE PWD PASV PORT "
     "HELP NOOP RETR STOR LIST";
-
 static t_help help_desc[14] =
     {
         {"USER", "USER <SP> <username> <CRLF> : Specify user for "
@@ -51,5 +52,5 @@ int exec_help_command(t_work *work, char *command)
       ++i;
     }
   }
-  return (send_message(CLI_SOCK(work), "%s %s", "502", "Command not supported."));
+  return (send_message(CLI_SOCK(work), "%s %s", "500", replies[R500]));
 }

@@ -9,8 +9,8 @@
 #include <string.h>
 #include <dirent.h>
 #include <stdlib.h>
+#include "server_tools.h"
 #include "replies.h"
-#include "types.h"
 #include "get_command.h"
 
 char const *replies[MAX_REPLIES];
@@ -90,12 +90,6 @@ int exec_list_command(t_work *work, char *command)
     return (send_message(CLI_SOCK(work), "%s %s", "425", replies[R425]));
   strtok(command, " ");
   if (launch_list(work, strtok(NULL, " ")))
-  {
-    close(work->data_socket);
-    work->data_socket = -1;
-    return (1);
-  }
-  close(work->data_socket);
-  work->data_socket = -1;
-  return (0);
+    return (close(work->data_socket) || 1);
+  return (close_datasocket(work));
 }
