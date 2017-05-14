@@ -36,8 +36,9 @@ static int send_ip(t_work *work, char *ip, uint16_t port)
   printf("beforesplit\n");
   if (split_ip(ips, ip))
     return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]) || 1);
-  return (send_message(CLI_SOCK(work), "%s %s (%s,%s,%s,%s,%d,%d)", "227", replies[R227],
-               ips[0], ips[1], ips[2], ips[3], port / 256, port % 256));
+  return (send_message(CLI_SOCK(work),
+                       "%s %s (%s,%s,%s,%s,%d,%d)", "227", replies[R227],
+                       ips[0], ips[1], ips[2], ips[3], port / 256, port % 256));
 }
 
 static int bind_client_socket(sockaddr_in_t *addr, uint16_t *port, Socket sock)
@@ -64,7 +65,7 @@ static int accept_client(t_work *work)
 {
   work->data.size = ADDR_SIZE;
   if ((work->data_socket = accept(work->data.sock,
-             (struct sockaddr*)&work->data.addr, &work->data.size)) < 0)
+                                  (struct sockaddr*)&work->data.addr, &work->data.size)) < 0)
   {
     close(work->data.sock);
     work->data.sock = -1;
@@ -89,7 +90,7 @@ int exec_pasv_command(t_work *work, char *command)
     return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]) || 1);
   len = sizeof(work->client->addr);
   getsockname(CLI_SOCK(work), (sockaddr_t *)&work->client->addr, &len);
-  if (send_ip(work, inet_ntoa(work->client->addr.sin_addr), port)) 
+  if (send_ip(work, inet_ntoa(work->client->addr.sin_addr), port))
   {
     close(work->data.sock);
     work->data.sock = -1;

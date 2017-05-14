@@ -9,7 +9,6 @@
 #include <string.h>
 #include <dirent.h>
 #include <stdlib.h>
-#include <errno.h>
 #include "replies.h"
 #include "types.h"
 #include "get_command.h"
@@ -42,13 +41,9 @@ int list_folder(t_work *work, DIR *dir)
 
 int list_file(t_work *work, const char *path)
 {
-  int fd;
   char *msg;
 
-  fd = open(path, O_RDONLY);
-  if (fd < 0 && errno != EACCES)
-    return (send_message(CLI_SOCK(work), "%s %s", "451", replies[R451]));
-  else if (fd >= 0)
+  if (access(path, F_OK) != -1)
     msg = strrchr(path, '/') + 1;
   else
     msg = "No such file or directory.";
