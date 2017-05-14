@@ -64,7 +64,7 @@ static int accept_client(t_work *work)
                                   (struct sockaddr*)&work->data.addr, &work->data.size)) < 0)
     return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]) ||
             close_datasocket(work) || 1);
-  printf("sock passive acctepted = %d\n", work->data.sock);
+  printf("sock passive acctepted = %d\n", work->data_socket);
   work->pasv_on = true;
   return (0);
 }
@@ -78,10 +78,7 @@ int exec_pasv_command(t_work *work, char *command)
   if (work->user == -1)
     return (send_message(CLI_SOCK(work), "%s %s", "530", replies[R530]));
   if ((work->port_on || work->pasv_on) && close_datasocket(work))
-  {
-    printf("cc pasv\n");
     return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]) || 1);
-  }
   if ((work->data.sock = create_socket(0)) < 0 ||
       bind_client_socket(&work->data.addr, &port, work->data.sock))
     return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]) || 1);
