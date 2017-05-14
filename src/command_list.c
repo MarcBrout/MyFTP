@@ -62,17 +62,7 @@ int launch_list(t_work *work, const char *path)
   int ret;
 
   fullpath = NULL;
-  if (path)
-  {
-    ret = path[0] == '/' ?
-    asprintf(&fullpath, "%s%s", work->root_path, path) :
-          strlen(work->path) == 1 ?
-          asprintf(&fullpath, "%s%s%s", work->root_path, work->path, path) :
-          asprintf(&fullpath, "%s%s/%s", work->root_path, work->path, path);
-  }
-  else
-    ret = asprintf(&fullpath, "%s%s", work->root_path, work->path);
-  if (ret < 0)
+  if (create_full_path(work, &fullpath, path))
     return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]) || 1);
   if ((dir = opendir(fullpath)))
   {

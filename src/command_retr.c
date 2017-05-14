@@ -5,7 +5,6 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
-#include <dirent.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -21,10 +20,8 @@ static int start_upload_to_client(t_work *work, int fd)
   if (send_message(CLI_SOCK(work), "%s %s", "125", replies[R125]))
     return (1);
   bzero(buff, 4096);
-  printf("starting... fd = %d\n", fd);
   while ((rd = read(fd, buff, 4095)) > 0)
   {
-    printf("sending...\n");
     if (write(work->data_socket, buff, rd) < 0)
       return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]) || 1);
     bzero(buff, 4096);
@@ -32,23 +29,15 @@ static int start_upload_to_client(t_work *work, int fd)
   close(fd);
   if (rd < 0)
     return (send_message(CLI_SOCK(work), "%s %s", "451", replies[R451]));
-  printf("over...\n");
   return (send_message(CLI_SOCK(work), "%s %s", "226", replies[R226]));
 }
 
 static int openFile(t_work *work, const char *file, int *fd)
 {
   char *fullpath;
-  int ret;
 
-  ret = file[0] == '/' ?
-        asprintf(&fullpath, "%s%s", work->root_path, file) :
-        strlen(work->path) == 1 ?
-        asprintf(&fullpath, "%s%s%s", work->root_path, work->path, file) :
-        asprintf(&fullpath, "%s%s/%s", work->root_path, work->path, file);
-  if (ret < 0)
+  if (create_full_path(work, &fullpath, file))
     return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]) || 1);
-  printf("fullpath = %s\n", fullpath);
   if (access(fullpath, F_OK) == -1 ||
       ((*fd = open(fullpath, O_RDONLY)) < 0))
   {
@@ -64,6 +53,10 @@ int exec_retr_command(t_work *work, char *command)
   char *line;
   int fd;
 
+  if (work->user == -1)
+    return (send_message(CLI_SOCK(work), "%s %s", "530", replies[R530]));
+  if (!work->pasv_on && !work->port_on)
+    return (send_message(CLI_SOCK(work), "%s %s", "425", replies[R425]));
   strtok(command, " ");
   line = strtok(NULL, " ");
   if (!line)

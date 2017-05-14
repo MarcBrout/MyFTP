@@ -71,7 +71,7 @@ static int process_command(t_work *work)
   while ((cmd = find_command(&gl_root)))
   {
     i = 0;
-    printf("Command receveid : %s\n", cmd);
+    printf("Command received : %s\n", cmd);
     while (gl_commands[i].exec != NULL)
     {
       if (!strncmp(gl_commands[i].command, cmd, gl_commands[i].len))

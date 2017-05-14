@@ -96,6 +96,5 @@ char *find_command(t_queue **root)
       return (build_command(root, cur));
     cur = cur->next;
   }
-  printf("NULL\n");
   return (NULL);
 }
