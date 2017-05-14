@@ -72,6 +72,7 @@ int main(int ac, char **av)
   action.sa_handler = &setOver;
   action.sa_flags = SA_SIGINFO;
   sigaction(SIGINT, &action, NULL);
+  signal(SIGPIPE, SIG_IGN);
   if (parse_args(av[2]) ||
       start_server(port, av[2]))
     return (EXIT_FAILURE);

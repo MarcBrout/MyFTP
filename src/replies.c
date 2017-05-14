@@ -4,7 +4,7 @@
 
 #include "replies.h"
 
-char *replies[MAX_REPLIES] = {
+char const *replies[MAX_REPLIES] = {
     "Restart marker reply.",
     "Service ready in nnn minutes.",
     "Data connection already open; transfer starting.",

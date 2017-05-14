@@ -3,8 +3,8 @@
 #include "replies.h"
 #include "get_command.h"
 
-char *replies[MAX_REPLIES];
-static t_account users[2] = {
+char const *replies[MAX_REPLIES];
+static t_account const users[2] = {
     {"Anonymous", ""},
     {"Dieu", "42"}
 };

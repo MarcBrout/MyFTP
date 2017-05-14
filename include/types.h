@@ -1,13 +1,16 @@
 #ifndef TYPES_H_
 # define TYPES_H_
 # define MAX_PAGE_SIZE 4096
+# define ADDR_SIZE sizeof(sockaddr_in_t)
 
 # include <netinet/in.h>
 # include <stdbool.h>
+# include <netdb.h>
 
 typedef int Socket;
 typedef struct sockaddr_in sockaddr_in_t;
 typedef struct sockaddr sockaddr_t;
+typedef struct hostent hostent_t;
 
 typedef struct s_account
 {
@@ -32,9 +35,9 @@ typedef struct s_work
 {
   t_client *server;
   t_client *client;
-  Socket data;
+  t_client data;
+  Socket data_socket;
   int user;
-  uint16_t port;
   char *path;
   char *root_path;
   bool pasv_on;

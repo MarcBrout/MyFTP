@@ -9,7 +9,7 @@
 #include "get_command.h"
 #include "replies.h"
 
-char *replies[MAX_REPLIES];
+char const *replies[MAX_REPLIES];
 
 static int check_dir(t_work *work, char *path)
 {

@@ -5,7 +5,7 @@
 #include "replies.h"
 #include "get_command.h"
 
-char *replies[MAX_REPLIES];
+char const *replies[MAX_REPLIES];
 
 int exec_unknown_command(t_work *work, char *command)
 {

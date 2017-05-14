@@ -20,6 +20,7 @@ int accept_connections(t_client *client, Socket sock)
     }
     return (0);
   }
+  printf("client socket accepted = %d\n", client->sock);
   write(client->sock, "220\r\n", 5);
   return (1);
 }

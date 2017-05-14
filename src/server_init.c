@@ -7,23 +7,21 @@
 
 Socket create_socket(int flag)
 {
-  static Socket sock = -1;
+  Socket sock;
   struct protoent *pe;
   int ok;
 
   ok = 1;
-  if (sock == -1)
+  pe = getprotobyname("TCP");
+  if (pe == NULL)
+    return (-1);
+  if ((sock = socket(AF_INET, SOCK_STREAM | flag, pe->p_proto)) == -1)
   {
-    pe = getprotobyname("TCP");
-    if (pe == NULL)
-      return (-1);
-    if ((sock = socket(AF_INET, SOCK_STREAM | flag, pe->p_proto)) == -1)
-    {
-      perror("");
-      fprintf(stderr, "Server Socket creation error occurred\n");
-    }
-    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &ok, sizeof(int));
+    perror("");
+    fprintf(stderr, "Server Socket creation error occurred\n");
   }
+  setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &ok, sizeof(int));
+  printf("sock created = %d\n", sock);
   return (sock);
 }
 

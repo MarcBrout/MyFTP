@@ -22,7 +22,6 @@ static int process_read(t_client const *client)
 
   if (!(raw_cmd = get_raw_command(client->sock)))
     return (1);
-  printf("raw_cmd = !%s!\n", raw_cmd);
   return (add_raw_command(&gl_root, raw_cmd));
 }
 
@@ -72,7 +71,7 @@ static int process_command(t_work *work)
   while ((cmd = find_command(&gl_root)))
   {
     i = 0;
-    printf("cmd = !%s!\n", cmd);
+    printf("Command receveid : %s\n", cmd);
     while (gl_commands[i].exec != NULL)
     {
       if (!strncmp(gl_commands[i].command, cmd, gl_commands[i].len))
@@ -88,9 +87,10 @@ static int init_work(t_client *server, t_client *client,
 {
   work->client = client;
   work->server = server;
-  work->data = -1;
+  bzero(&work->data.addr, ADDR_SIZE);
+  work->data.sock = -1;
+  work->data.size = ADDR_SIZE;
   work->user = -1;
-  work->port = 0;
   if (!(work->path = strdup("/")))
     return (1);
   work->root_path = path;
@@ -109,7 +109,6 @@ int server_logic(t_client *server, t_client *client, char *path)
     return (EXIT_FAILURE);
   while (!work.quit)
   {
-    printf("Loop\n");
     if (process_read(client) || process_command(&work))
       return (EXIT_FAILURE);
   }

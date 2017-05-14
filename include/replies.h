@@ -49,6 +49,6 @@ enum REPLIES
   MAX_REPLIES
 };
 
-extern char *replies[MAX_REPLIES];
+extern char const *replies[MAX_REPLIES];
 
 #endif /* !REPLIES_H_ */
