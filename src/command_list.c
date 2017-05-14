@@ -47,7 +47,7 @@ int list_file(t_work *work, const char *path)
     msg = strrchr(path, '/') + 1;
   else
     msg = "No such file or directory.";
-  if (send_message(CLI_SOCK(work), "%s %s", "150", replies[R150]))
+  if (send_message(CLI_SOCK(work), "%s %s", "125", replies[R150]))
     return (1);
   if (write(work->data_socket, msg, strlen(msg)) < 0 ||
       write(work->data_socket, "\r\n", 2) < 0)
@@ -90,6 +90,6 @@ int exec_list_command(t_work *work, char *command)
     return (send_message(CLI_SOCK(work), "%s %s", "425", replies[R425]));
   strtok(command, " ");
   if (launch_list(work, strtok(NULL, " ")))
-    return (close(work->data_socket) || 1);
+    return (close_datasocket(work) || 1);
   return (close_datasocket(work));
 }

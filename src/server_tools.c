@@ -8,8 +8,10 @@
 
 int close_datasocket(t_work *work)
 {
+  if (close(work->data_socket))
+    return (1);
   work->data_socket = -1;
   work->pasv_on = work->port_on = false;
   bzero(&work->data.addr, ADDR_SIZE);
-  return (close(work->data_socket));
+  return (0);
 }

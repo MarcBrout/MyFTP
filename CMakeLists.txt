@@ -30,7 +30,6 @@ set(MYFTP
 
 set(TEST_C
         ./include
-        ./src/main_test.c
         ./src/get_command.c)
 
 add_executable(myftp ${MYFTP})

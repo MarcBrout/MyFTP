@@ -59,8 +59,11 @@ int exec_port_command(t_work *work, char *command)
 
   if (work->user == -1)
     return (send_message(CLI_SOCK(work), "%s %s", "530", replies[R530]));
-  if (work->port_on || work->pasv_on || close_datasocket(work))
+  if ((work->port_on || work->pasv_on) && close_datasocket(work))
+  {
+    printf("cc actv\n");
     return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]) || 1);
+  }
   if (parse_ip(work, command, &dest, &port))
     return (1);
   if (!dest)
