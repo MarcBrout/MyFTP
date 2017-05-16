@@ -48,7 +48,7 @@ int		go_active(t_work *work, char *ip, uint16_t port)
 {
   if ((work->data_socket = create_socket(0)) < 0)
     return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]) || 1);
-  bzero(&work->data.addr, ADDR_SIZE);
+  memset(&work->data.addr, 0, ADDR_SIZE);
   work->data.addr.sin_addr.s_addr = inet_addr(ip);
   work->data.addr.sin_port = htons(port);
   work->data.addr.sin_family = AF_INET;

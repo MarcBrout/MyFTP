@@ -19,7 +19,7 @@ int		close_datasocket(t_work *work)
     return (1);
   work->data_socket = -1;
   work->pasv_on = work->port_on = false;
-  bzero(&work->data.addr, ADDR_SIZE);
+  memset(&work->data.addr, 0, ADDR_SIZE);
   return (0);
 }
 

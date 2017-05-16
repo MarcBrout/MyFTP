@@ -70,7 +70,7 @@ Socket			init_server(uint16_t port)
   sockaddr_in_t addr;
   Socket sock;
 
-  bzero(&addr, sizeof(addr));
+  memset(&addr, 0, sizeof(addr));
   sock = create_socket(SOCK_NONBLOCK);
   if (sock < 0)
     return (-1);

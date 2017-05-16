@@ -24,13 +24,13 @@ static int	start_upload_to_client(t_work *work, int fd)
 
   if (send_message(CLI_SOCK(work), "%s %s", "125", replies[R125]))
     return (1);
-  bzero(buff, 4096);
+  memset(buff, 0, 4096);
   while ((rd = read(fd, buff, 4095)) > 0)
     {
       if (write(work->data_socket, buff, rd) < 0)
 	return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421])
 		|| 1);
-      bzero(buff, 4096);
+      memset(buff, 0, 4096);
     }
   close(fd);
   if (rd < 0)

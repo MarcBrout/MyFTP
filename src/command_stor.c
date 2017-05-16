@@ -26,13 +26,13 @@ int		start_download_from_client(t_work *work, int fd)
     return (send_message(CLI_SOCK(work), "%s %s", "550", replies[R550]));
   if (send_message(CLI_SOCK(work), "%s %s", "125", replies[R125]))
     return (1);
-  bzero(buff, 4096);
+  memset(buff, 0, 4096);
   while ((rd = read(work->data_socket, buff, 4095)) > 0)
     {
       if (write(fd, buff, rd) < 0)
 	return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421])
 		|| 1);
-      bzero(buff, 4096);
+      memset(buff, 0, 4096);
     }
   close(fd);
   if (rd < 0)

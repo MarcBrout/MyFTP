@@ -17,7 +17,7 @@
 
 int		accept_connections(t_client *client, Socket sock)
 {
-  bzero(&client->addr, sizeof(client->addr));
+  memset(&client->addr, 0, sizeof(client->addr));
   client->size = sizeof(client->addr);
   client->sock = accept(sock, (sockaddr_t *)&client->addr, &client->size);
   if (client->sock == -1)

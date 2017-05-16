@@ -72,7 +72,7 @@ int			main(int ac, char **av)
       return (EXIT_FAILURE);
     }
   port = (uint16_t)atoi(av[1]);
-  bzero(&action, sizeof(struct sigaction));
+  memset(&action, 0, sizeof(struct sigaction));
   action.sa_handler = &setOver;
   action.sa_flags = SA_SIGINFO;
   sigaction(SIGINT, &action, NULL);

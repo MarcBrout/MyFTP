@@ -107,7 +107,7 @@ static int		init_work(t_client *server, t_client *client,
 {
   work->client = client;
   work->server = server;
-  bzero(&work->data.addr, ADDR_SIZE);
+  memset(&work->data.addr, 0, ADDR_SIZE);
   work->data.sock = -1;
   work->data.size = ADDR_SIZE;
   work->user = -1;

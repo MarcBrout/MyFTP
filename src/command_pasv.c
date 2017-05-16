@@ -27,7 +27,7 @@ static int	split_ip(char ips[4][4], char *ip)
   token = strtok(ip, ".");
   while (token && i < 4)
     {
-      bzero(ips[i], 4);
+      memset(ips[i], 0, 4);
       strcat(ips[i], token);
       token = strtok(NULL, ".");
       ++i;

@@ -27,7 +27,7 @@ char		*get_raw_command(Socket sock)
       pos += MAX_PAGE_SIZE;
       if (!(cmd = realloc(cmd, pos + MAX_PAGE_SIZE)))
 	return (NULL);
-      bzero(&cmd[pos], MAX_PAGE_SIZE);
+      memset(&cmd[pos], 0, MAX_PAGE_SIZE);
       --pos;
     }
   if (ret == -1)
