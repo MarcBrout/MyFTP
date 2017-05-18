@@ -85,7 +85,7 @@ int		exec_cdup_command(t_work *work, char *command)
     return (send_message(CLI_SOCK(work), "%s %s", "530", replies[R530]));
   if (cdup(work, command))
     return (1);
-  return (send_message(CLI_SOCK(work), "%s %s", "200", replies[R200]));
+  return (send_message(CLI_SOCK(work), "%s %s", "250", replies[R250]));
 }
 
 int		exec_cwd_command(t_work *work, char *command)
@@ -101,12 +101,11 @@ int		exec_cwd_command(t_work *work, char *command)
 	{
 	  if (cdup(work, command))
 	    return (1);
-	  return (send_message(CLI_SOCK(work), "%s \"%s\"", "257",
-			       work->path));
+	  return (send_message(CLI_SOCK(work), "%s \"%s\"", "250", replies[R250]));
 	}
       if (path[0] == '/')
 	return (check_dir(work, path) == 1);
       return (compute_dir(work, path));
     }
-  return (send_message(CLI_SOCK(work), "%s %s", "501", replies[R501]));
+  return (send_message(CLI_SOCK(work), "%s %s", "550", replies[R550]));
 }
