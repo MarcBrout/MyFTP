@@ -19,38 +19,41 @@ static t_account const	users[2] = {
     {"Dieu", "42"}
 };
 
-int		exec_password_command(t_work *work, char *command)
+static int   get_user(t_work *work)
 {
-  char		*value;
   int     user;
 
-  strtok(command, " ");
-  value = strtok(NULL, " ");
   user = 0;
   work->user = -1;
   while (user < 2)
+  {
+    if (!strcmp(work->user_name, users[user].user))
     {
-      if (!strcmp(work->user_name, users[user].user))
-      {
-        work->user = user;
-        break;
-      }
-      ++user;
+      work->user = user;
+      break;
     }
+    ++user;
+  }
+  return (user);
+}
+
+int		exec_password_command(t_work *work, char *command)
+{
+  char		*value;
+  int user;
+
+  strtok(command, " ");
+  value = strtok(NULL, " ");
+  user = get_user(work);
   if (user == 2)
     return (send_message(CLI_SOCK(work), "%s %s", "530", replies[R530]));
-
   if (!user)
     return (send_message(CLI_SOCK(work), "%s %s", "230", replies[R230]));
-
-  if (value)
-  {
-    if (!strcmp(value, users[work->user].password))
+  if (value && !strcmp(value, users[work->user].password))
     {
       work->logged = true;
       return (send_message(CLI_SOCK(work), "%s %s", "230", replies[R230]));
     }
-  }
   return (send_message(CLI_SOCK(work), "%s %s", "530", replies[R530]));
 }
 

@@ -81,6 +81,8 @@ int		cdup(t_work *work, char *command)
 
 int		exec_cdup_command(t_work *work, char *command)
 {
+  if (work->user == -1)
+    return (send_message(CLI_SOCK(work), "%s %s", "530", replies[R530]));
   if (cdup(work, command))
     return (1);
   return (send_message(CLI_SOCK(work), "%s %s", "200", replies[R200]));
@@ -90,6 +92,8 @@ int		exec_cwd_command(t_work *work, char *command)
 {
   char		*path;
 
+  if (work->user == -1)
+    return (send_message(CLI_SOCK(work), "%s %s", "530", replies[R530]));
   strtok(command, " ");
   if ((path = strtok(NULL, " ")))
     {

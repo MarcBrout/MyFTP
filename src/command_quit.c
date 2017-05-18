@@ -9,12 +9,14 @@
 */
 #include <unistd.h>
 #include "types.h"
+#include "get_command.h"
+#include "replies.h"
+
+const char *replies[MAX_REPLIES];
 
 int exec_quit_command(t_work *work, char *command)
 {
   (void)command;
   work->quit = true;
-  if (write(work->client->sock, "221\r\n", 5) < 0)
-    return (1);
-  return (0);
+  return (send_message(CLI_SOCK(work), "%s %s", "221", replies[R221]));
 }
