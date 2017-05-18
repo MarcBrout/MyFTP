@@ -10,9 +10,14 @@
 
 #include "types.h"
 #include "get_command.h"
+#include "replies.h"
+
+const char *replies[MAX_REPLIES];
 
 int		exec_pwd_command(t_work *work, char *command)
 {
   (void)command;
+  if (work->user == -1)
+    return (send_message(CLI_SOCK(work), "%s %s", "530", replies[R530]));
   return (send_message(CLI_SOCK(work), "%s \"%s\"", "257", work->path));
 }

@@ -8,12 +8,11 @@
 ** Last update Sun May 14 16:07:46 2017 brout_m
 */
 #include <unistd.h>
+#include <get_command.h>
 #include "types.h"
 
 int exec_noop_command(t_work *work, char *command)
 {
   (void)command;
-  if (write(work->client->sock, "200\r\n", 5) < 0)
-    return (1);
-  return (0);
+  return (send_message(CLI_SOCK(work), "%s %s", "200", "noop"));
 }
