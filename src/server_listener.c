@@ -29,7 +29,7 @@ int		accept_connections(t_client *client, Socket sock)
 	}
       return (0);
     }
-  write(client->sock, "220", 3);
+  write(client->sock, "220 ok\r\n", strlen("220 ok\r\n"));
   return (1);
 }
 
