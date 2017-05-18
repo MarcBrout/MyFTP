@@ -55,6 +55,7 @@ typedef struct			s_work
   int				user;
   char				*path;
   char				*root_path;
+  char        *user_name;
   bool				pasv_on;
   bool				port_on;
   bool				quit;
