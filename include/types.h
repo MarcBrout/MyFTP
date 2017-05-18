@@ -5,7 +5,7 @@
 ** Login   <marc.brout@epitech.eu>
 **
 ** Started on  Sun May 14 16:26:14 2017 brout_m
-** Last update Thu May 18 14:06:48 2017 brout_m
+** Last update Thu May 18 16:08:55 2017 brout_m
 */
 #ifndef TYPES_H_
 # define TYPES_H_
@@ -55,7 +55,7 @@ typedef struct			s_work
   int				user;
   char				*path;
   char				*root_path;
-  char        *user_name;
+  char				*user_name;
   bool				pasv_on;
   bool				port_on;
   bool				quit;

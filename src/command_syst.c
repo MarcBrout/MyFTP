@@ -5,15 +5,12 @@
 ** Login   <marc.brout@epitech.eu>
 **
 ** Started on  Sun May 14 16:06:43 2017 brout_m
-** Last update Sun May 14 16:07:12 2017 brout_m
+** Last update Thu May 18 16:12:17 2017 brout_m
 */
-#include <unistd.h>
-#include "types.h"
+#include "get_command.h"
 
 int exec_syst_command(t_work *work, char *command)
 {
   (void)command;
-  if (write(work->client->sock, "215 UNIX type: L8\r\n", 19) < 0)
-    return (1);
-  return (0);
+  return (send_message(CLI_SOCK(work), "%s %s", "215", "UNIX type: L8"));
 }

@@ -5,7 +5,7 @@
 ** Login   <marc.brout@epitech.eu>
 **
 ** Started on  Sun May 14 16:06:55 2017 brout_m
-** Last update Sun May 14 16:15:25 2017 brout_m
+** Last update Thu May 18 16:14:45 2017 brout_m
 */
 #include <string.h>
 #include <unistd.h>
@@ -14,33 +14,34 @@
 #include "get_command.h"
 
 char const		*replies[MAX_REPLIES];
-static t_account const	users[2] = {
+static t_account const	users[2] =
+  {
     {"Anonymous", ""},
     {"Dieu", "42"}
-};
+  };
 
-static int   get_user(t_work *work)
+static int	get_user(t_work *work)
 {
-  int     user;
+  int		user;
 
   user = 0;
   work->user = -1;
   while (user < 2)
-  {
-    if (!strcmp(work->user_name, users[user].user))
     {
-      work->user = user;
-      break;
+      if (!strcmp(work->user_name, users[user].user))
+	{
+	  work->user = user;
+	  break;
+	}
+      ++user;
     }
-    ++user;
-  }
   return (user);
 }
 
 int		exec_password_command(t_work *work, char *command)
 {
   char		*value;
-  int user;
+  int		user;
 
   strtok(command, " ");
   value = strtok(NULL, " ");
@@ -65,9 +66,9 @@ int		exec_user_command(t_work *work, char *command)
   value = strtok(NULL, " ");
   work->logged = false;
   if (value)
-  {
-    if (!(work->user_name = strdup(value)))
-      return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]));
-  }
+    {
+      if (!(work->user_name = strdup(value)))
+	return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]));
+    }
   return (send_message(CLI_SOCK(work), "%s %s", "331", replies[R331]));
 }

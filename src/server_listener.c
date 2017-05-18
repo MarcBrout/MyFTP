@@ -12,8 +12,9 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
-#include "types.h"
+#include "get_command.h"
 #include "server_logic.h"
+
 
 int		accept_connections(t_client *client, Socket sock)
 {
@@ -29,7 +30,7 @@ int		accept_connections(t_client *client, Socket sock)
 	}
       return (0);
     }
-  write(client->sock, "220 ok\r\n", strlen("220 ok\r\n"));
+  send_message(client->sock, "%s %s", "220", "connected");
   return (1);
 }
 
