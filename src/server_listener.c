@@ -15,7 +15,6 @@
 #include "get_command.h"
 #include "server_logic.h"
 
-
 int		accept_connections(t_client *client, Socket sock)
 {
   memset(&client->addr, 0, sizeof(client->addr));
