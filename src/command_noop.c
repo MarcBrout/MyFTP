@@ -7,9 +7,7 @@
 ** Started on  Sun May 14 16:04:05 2017 brout_m
 ** Last update Sun May 14 16:07:46 2017 brout_m
 */
-#include <unistd.h>
 #include <get_command.h>
-#include "types.h"
 
 int exec_noop_command(t_work *work, char *command)
 {

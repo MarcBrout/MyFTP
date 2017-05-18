@@ -9,7 +9,6 @@
 */
 #include <string.h>
 #include <unistd.h>
-#include <stdio.h>
 #include "replies.h"
 #include "get_command.h"
 

@@ -7,7 +7,6 @@
 ** Started on  Sun May 14 16:05:37 2017 brout_m
 ** Last update Thu May 18 16:16:48 2017 brout_m
 */
-#include <unistd.h>
 #include "types.h"
 #include "get_command.h"
 #include "replies.h"
