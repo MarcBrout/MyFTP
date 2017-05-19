@@ -27,7 +27,7 @@ set(MYFTP
         ./src/server.c
         ./src/server_init.c
         ./src/server_listener.c
-        ./src/server_logic.c src/command_quit.c src/command_syst.c include/replies.h src/replies.c src/server_tools.c include/server_tools.h)
+        ./src/server_logic.c src/command_quit.c src/command_syst.c include/replies.h src/replies.c src/server_tools.c include/server_tools.h src/thread.c)
 
 set(TEST_C
         ./include

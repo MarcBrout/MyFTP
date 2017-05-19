@@ -5,7 +5,7 @@
 ** Login   <marc.brout@epitech.eu>
 **
 ** Started on  Sun May 14 16:04:15 2017 brout_m
-** Last update Sun May 14 16:30:29 2017 brout_m
+** Last update Fri May 19 11:30:09 2017 brout_m
 */
 #include <stdio.h>
 #include <unistd.h>
@@ -16,7 +16,7 @@
 #include "replies.h"
 #include "get_command.h"
 
-char const *replies[MAX_REPLIES];
+char const	*replies[MAX_REPLIES];
 
 static int	split_ip(char ips[4][4], char *ip)
 {
@@ -65,7 +65,7 @@ static int	bind_client_socket(sockaddr_in_t *addr,
   return (0);
 }
 
-static int	accept_client(t_work *work)
+int		accept_client(t_work *work)
 {
   work->data.size = ADDR_SIZE;
   if ((work->data_socket = accept(work->data.sock,
@@ -73,7 +73,6 @@ static int	accept_client(t_work *work)
 				  &work->data.size)) < 0)
     return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]) ||
             close_datasocket(work) || 1);
-  work->pasv_on = true;
   return (0);
 }
 
@@ -94,5 +93,6 @@ int		exec_pasv_command(t_work *work, char *command)
   getsockname(CLI_SOCK(work), (sockaddr_t *)&work->client->addr, &len);
   if (send_ip(work, inet_ntoa(work->client->addr.sin_addr), port))
     return (close_datasocket(work) || 1);
-  return (accept_client(work));
+  work->pasv_on = true;
+  return (0);
 }

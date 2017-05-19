@@ -25,7 +25,8 @@ SRC			=		command_cwd.c 		\
 					server_listener.c	\
 					server_logic.c		\
 					server_tools.c		\
-					replies.c
+					replies.c		\
+					thread.c
 
 SRCS		= 		$(addprefix $(SRC_DIR), $(SRC))
 
@@ -42,7 +43,7 @@ CFLAGS		+=		-g3
 endif
 
 $(NAME): $(OBJ)
-	$(CC) -o $(NAME) $(OBJ) $(INCLUDE)
+	$(CC) -o $(NAME) $(OBJ) $(INCLUDE) -pthread
 
 all: $(NAME)
 

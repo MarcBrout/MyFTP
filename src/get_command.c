@@ -5,7 +5,7 @@
 ** Login   <marc.brout@epitech.eu>
 **
 ** Started on  Sun May 14 16:08:22 2017 brout_m
-** Last update Sun May 14 16:34:53 2017 brout_m
+** Last update Fri May 19 11:32:09 2017 brout_m
 */
 #include <unistd.h>
 #include <string.h>
@@ -13,19 +13,25 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "types.h"
+#include "get_command.h"
 
 int		send_message(Socket sock, const char *format, ...)
 {
+  int		ret;
   va_list	list;
 
   va_start(list, format);
+  lock();
   if (vdprintf(sock, format, list) < 0)
     {
       va_end(list);
+      unlock();
       return (1);
     }
   va_end(list);
-  return (write(sock, "\r\n", 2) < 0);
+  ret = write(sock, "\r\n", 2);
+  unlock();
+  return (ret < 0);
 }
 
 static char	*concat(t_queue **root, char **dest)

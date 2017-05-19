@@ -5,7 +5,7 @@
 ** Login   <marc.brout@epitech.eu>
 **
 ** Started on  Mon May  8 13:54:27 2017 brout_m
-** Last update Sun May 14 16:57:38 2017 brout_m
+** Last update Fri May 19 11:32:46 2017 brout_m
 */
 #include <stdlib.h>
 #include <string.h>
@@ -38,7 +38,7 @@ static int		process_read(t_client const *client)
   return (add_raw_command(&gl_root, raw_cmd));
 }
 
-static t_command gl_commands[35] =
+static t_command	gl_commands[35] =
   {
     {"QUIT", 4, exec_quit_command},
     {"USER", 4, exec_user_command},
@@ -131,9 +131,13 @@ int			server_logic(t_client *server,
   while (!work.quit)
     {
       if (process_read(client) || process_command(&work))
-	return (EXIT_FAILURE);
+	{
+	  destroy_mutex();
+	  return (EXIT_FAILURE);
+	}
     }
   free_list();
   free(work.path);
+  destroy_mutex();
   return (EXIT_SUCCESS);
 }

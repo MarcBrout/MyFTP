@@ -5,7 +5,7 @@
 ** Login   <marc.brout@epitech.eu>
 **
 ** Started on  Sun May 14 16:05:47 2017 brout_m
-** Last update Sun May 14 16:37:03 2017 brout_m
+** Last update Fri May 19 11:30:48 2017 brout_m
 */
 #define _GNU_SOURCE
 #include <stdio.h>
@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <pthread.h>
 #include "get_command.h"
 #include "replies.h"
 #include "server_tools.h"
@@ -28,7 +29,7 @@ static int	start_upload_to_client(t_work *work, int fd)
   while ((rd = read(fd, buff, 4095)) > 0)
     {
       if (write(work->data_socket, buff, rd) < 0)
-	return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421])
+	return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R451])
 		|| 1);
       memset(buff, 0, 4096);
     }
@@ -43,31 +44,49 @@ static int	openFile(t_work *work, const char *file, int *fd)
   char		*fullpath;
 
   if (create_full_path(work, &fullpath, file))
-    return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R421]) || 1);
+    return (send_message(CLI_SOCK(work), "%s %s", "421", replies[R451]) || 1);
   if (access(fullpath, F_OK) == -1 ||
       ((*fd = open(fullpath, O_RDONLY)) < 0))
     {
       free(fullpath);
-      return (send_message(CLI_SOCK(work), "%s %s", "550", replies[R550]));
+      return (send_message(CLI_SOCK(work), "%s %s", "550", replies[R550])
+              || 1);
     }
   free(fullpath);
   return (0);
 }
 
-int		exec_retr_command(t_work *work, char *command)
+static void	*launch_threaded_retr(void *_thdata)
 {
+  t_thdata	*thdata;
   char		*line;
   int		fd;
 
+  thdata = _thdata;
+  strtok(thdata->command, " ");
+  line = strtok(NULL, " ");
+  if (!line)
+    {
+      send_message(CLI_SOCK(thdata->work), "%s %s", "501", replies[R501]);
+      free(thdata->command);
+      pthread_exit(NULL);
+    }
+  if (!openFile(thdata->work, line, &fd))
+    start_upload_to_client(thdata->work, fd);
+  close_datasocket(thdata->work);
+  free(thdata->command);
+  pthread_exit(NULL);
+}
+
+int		exec_retr_command(t_work *work, char *command)
+{
   if (work->user == -1)
     return (send_message(CLI_SOCK(work), "%s %s", "530", replies[R530]));
   if (!work->pasv_on && !work->port_on)
     return (send_message(CLI_SOCK(work), "%s %s", "425", replies[R425]));
-  strtok(command, " ");
-  line = strtok(NULL, " ");
-  if (!line)
-    return (send_message(CLI_SOCK(work), "%s %s", "501", replies[R501]));
-  if (openFile(work, line, &fd) || start_upload_to_client(work, fd))
+  if (work->pasv_on && accept_client(work))
+    return (1);
+  if (launch_thread(work, command, launch_threaded_retr))
     return (close_datasocket(work) || 1);
-  return (close_datasocket(work));
+  return (0);
 }
